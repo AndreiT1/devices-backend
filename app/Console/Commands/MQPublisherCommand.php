@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Events\StatusNotification;
 use App\Services\RabbitMQService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +35,7 @@ class MQPublisherCommand extends Command
         for($i = 1 ; $i < 30; $i++ ) {
             $message = [
                 "serial_number" => $i,
-                "timestamp" => "2022-08-09T12:20:43",
+                "timestamp" => Carbon::now(),
                 "status" => rand(0,8)
             ];
             $mqService->publish(json_encode($message));

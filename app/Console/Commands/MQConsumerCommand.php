@@ -36,6 +36,7 @@ class MQConsumerCommand extends Command
             $deviceStatus = DeviceLastStatus::find($body['serial_number']);
             if ($deviceStatus){
                 $deviceStatus->status = (int)$body['status'];
+                $deviceStatus->updated_at = $body['timestamp'];
                 $deviceStatus->save();
                 StatusNotification::dispatch(json_encode($deviceStatus));
             }
