@@ -16,7 +16,7 @@ class MQPublisherCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:m-q-publisher-command';
+    protected $signature = 'mq:publish';
 
     /**
      * The console command description.

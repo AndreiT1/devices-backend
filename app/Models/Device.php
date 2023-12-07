@@ -21,6 +21,8 @@ class Device extends Model
 {
     public $table = 'device';
 
+    protected $primaryKey = 'serial_number';
+
     public function deviceLastStatus(): HasOne
     {
         return $this->hasOne(DeviceLastStatus::class, 'serial_number','serial_number');

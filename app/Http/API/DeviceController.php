@@ -51,17 +51,18 @@ class DeviceController extends BaseController
             throw $e;
         }
 
-        return $device;
+        return response()->json($device,201);
     }
 
     public function update(Request $request)
     {
-        $device = Device::where('serial_number', '=', $request->get('serial_number'));
+        Log::error(json_encode($request));
+        $device = Device::where('serial_number', '=', $request->get('serial_number'))->first();
         if($request->has('name')) {
             $device->name = $request->get('name');
             $device->save();
         }
-        return $device;
+        return response()->json($device, 200);
     }
 
     public function destroy($id)
