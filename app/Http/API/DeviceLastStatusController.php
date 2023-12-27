@@ -3,6 +3,8 @@
 namespace App\Http\API;
 
 use App\Models\DeviceLastStatus;
+use App\Services\RabbitMQService;
+use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -15,5 +17,18 @@ class DeviceLastStatusController extends BaseController
             ['serial_number' => $request->get('serial_number')],
             ['status' => (int)$request->get('status')]
         );
+    }
+    public function randomizeDeviceStatuses(): void
+    {
+        $mqService = new RabbitMQService();
+        // status messages update simulation
+        for($i = 1 ; $i < 30; $i++ ) {
+            $message = [
+                "serial_number" => $i,
+                "timestamp" => Carbon::now(),
+                "status" => rand(0,8)
+            ];
+            $mqService->publish(json_encode($message));
+        }
     }
 }

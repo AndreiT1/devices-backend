@@ -36,7 +36,7 @@ class DeviceController extends BaseController
         try {
             DB::beginTransaction();
             $device = new Device();
-            $device->serial_number = $request->get('serialNumber');
+            $device->serial_number = (int)$request->get('serialNumber');
             $device->name = $request->get('deviceName');
             $device->latitude = floatval($request->get('lat'));
             $device->longitude = floatval($request->get('long'));

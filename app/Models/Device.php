@@ -21,7 +21,16 @@ class Device extends Model
 {
     public $table = 'device';
 
+    protected $fillable = ['serial_number'];
+
     protected $primaryKey = 'serial_number';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     public function deviceLastStatus(): HasOne
     {

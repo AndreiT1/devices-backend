@@ -26,4 +26,5 @@ Route::put('/device', [\App\Http\API\DeviceController::class, 'update']);
 Route::delete('/device/{id}', [\App\Http\API\DeviceController::class, 'destroy']);
 
 Route::post('/device/{id}/status', [\App\Http\API\DeviceLastStatusController::class, 'updateOrCreate']);
+Route::get('/device/status/randomize', [\App\Http\API\DeviceLastStatusController::class, 'randomizeDeviceStatuses']);
 

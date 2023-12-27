@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    \App\Events\StatusNotification::dispatch(json_encode(['message' => 'mesaj']));
+    \App\Jobs\SendWelcomeEmail::dispatch();
     return view('welcome');
 });
