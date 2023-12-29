@@ -10,6 +10,11 @@ use Illuminate\Routing\Controller as BaseController;
 
 class DeviceLastStatusController extends BaseController
 {
+    private RabbitMQService $MQService;
+    public function __construct(RabbitMQService $MQService)
+    {
+        $this->MQService = $MQService;
+    }
 
     public function updateOrCreate(Request $request)
     {
@@ -18,17 +23,16 @@ class DeviceLastStatusController extends BaseController
             ['status' => (int)$request->get('status')]
         );
     }
+
     public function randomizeDeviceStatuses(): void
     {
-        $mqService = new RabbitMQService();
-        // status messages update simulation
-        for($i = 1 ; $i < 30; $i++ ) {
+        for ($i = 1; $i < 30; $i++) {
             $message = [
                 "serial_number" => $i,
                 "timestamp" => Carbon::now(),
-                "status" => rand(0,8)
+                "status" => rand(0, 8)
             ];
-            $mqService->publish(json_encode($message));
+            $this->MQService->publish(json_encode($message));
         }
     }
 }

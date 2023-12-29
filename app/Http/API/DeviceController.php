@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class DeviceController extends BaseController
 {
@@ -17,15 +16,18 @@ class DeviceController extends BaseController
  {
  }
 
-    public function index(Request $request)
+    public function index()
     {
-        return Device::with('deviceLastStatus')->get();
+
+        $data = Device::with('deviceLastStatus:status,serial_number')->get();
+        return response()->json($data,200);
     }
 
 
     public function get($id)
     {
-        return Device::findOrFail($id);
+        $device = Device::findOrFail($id);
+        return response()->json($device, 200);
     }
 
     /**
@@ -33,6 +35,12 @@ class DeviceController extends BaseController
      */
     public function create(Request $request)
     {
+        $request->validate([
+            'serialNumber' => 'required|integer|unique:device,serial_number',
+            'deviceName' => 'required|string',
+            'lat' => 'required|numeric',
+            'long' => 'required|numeric'
+        ]);
         try {
             DB::beginTransaction();
             $device = new Device();
@@ -56,7 +64,9 @@ class DeviceController extends BaseController
 
     public function update(Request $request)
     {
-        Log::error(json_encode($request));
+        $request->validate([
+            'serialNumber' => 'required|integer',
+        ]);
         $device = Device::where('serial_number', '=', $request->get('serial_number'))->first();
         if($request->has('name')) {
             $device->name = $request->get('name');
@@ -70,7 +80,7 @@ class DeviceController extends BaseController
         try {
             $device = Device::findOrFail($id);
         } catch (ModelNotFoundException $e) {
-            return response()->json('Model not found', 404);
+            return response()->json('Model not found ', 404);
         }
 
         $device->delete();
