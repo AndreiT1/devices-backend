@@ -12,15 +12,15 @@ use Illuminate\Support\Facades\DB;
 
 class DeviceController extends BaseController
 {
- public function __construct()
- {
- }
+    public function __construct()
+    {
+    }
 
     public function index()
     {
 
         $data = Device::with('deviceLastStatus:status,serial_number')->get();
-        return response()->json($data,200);
+        return response()->json($data, 200);
     }
 
 
@@ -59,16 +59,16 @@ class DeviceController extends BaseController
             throw $e;
         }
 
-        return response()->json($device,201);
+        return response()->json($device, 201);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'serialNumber' => 'required|integer',
+            'serial_number' => 'required|integer',
         ]);
-        $device = Device::where('serial_number', '=', $request->get('serial_number'))->first();
-        if($request->has('name')) {
+        $device = Device::where('serial_number', '=', $request->get('serial_number'))->firstOrFail();
+        if ($request->has('name')) {
             $device->name = $request->get('name');
             $device->save();
         }
@@ -78,7 +78,7 @@ class DeviceController extends BaseController
     public function destroy($id)
     {
         try {
-            $device = Device::findOrFail($id);
+            $device = Device::where('serial_number', '=', $id);
         } catch (ModelNotFoundException $e) {
             return response()->json('Model not found ', 404);
         }
